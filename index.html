@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal PIE 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --pie-color: #6f42c1;     /* Morado PIE */
+            --pie-light: #e0cffc;
+            --support-color: #0dcaf0; /* Cian Apoyo */
+            --bg-color: #f3f0ff;      /* Fondo suave lavanda */
+        }
+        body { background-color: var(--bg-color); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* HEADER */
+        .main-header {
+            background: white; border-bottom: 4px solid var(--pie-color);
+            padding: 1rem 0; margin-bottom: 2.5rem; box-shadow: 0 2px 10px rgba(111, 66, 193, 0.1);
+        }
+        .school-logo { height: 65px; margin-right: 15px; }
+        
+        /* SECCIONES */
+        .section-header { 
+            display: flex; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.5rem;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #495057; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
+        .section-icon { margin-right: 10px; font-size: 1.2rem; }
+
+        /* TARJETAS */
+        .app-card {
+            background: white; border: none; border-radius: 12px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-decoration: none; color: inherit; height: 100%; display: block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05);
+        }
+        .app-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(111, 66, 193, 0.15); }
+        
+        .card-body-custom { padding: 1.5rem; display: flex; align-items: flex-start; gap: 15px; }
+        
+        .app-icon {
+            width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; flex-shrink: 0;
+        }
+        
+        .app-info h5 { font-weight: 700; font-size: 1rem; margin-bottom: 4px; color: #212529; }
+        .app-info p { font-size: 0.8rem; color: #6c757d; margin: 0; line-height: 1.3; }
+
+        /* ESTILOS POR ZONA */
+        /* Zona Gestión PIE (Morado) */
+        .zone-pie .app-icon { background-color: var(--pie-light); color: var(--pie-color); }
+        .zone-pie:hover { border-left: 4px solid var(--pie-color); }
+
+        /* Zona Calculadoras (Azul/Cian) */
+        .zone-calc .app-icon { background-color: #cff4fc; color: #055160; }
+        .zone-calc:hover { border-left: 4px solid #0dcaf0; }
+
+        .footer { text-align: center; padding: 2rem; color: #adb5bd; font-size: 0.8rem; border-top: 1px solid #e9ecef; background: white; margin-top: auto;}
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="logo.jpg" alt="SS.CC." class="school-logo">
+                <div>
+                    <h1 class="h5 fw-bold mb-0 text-dark">Programa de Integración Escolar</h1>
+                    <span class="badge" style="background-color: var(--pie-color);">Equipo PIE 2026</span>
+                </div>
+            </div>
+            <div class="text-end d-none d-md-block">
+                <small class="text-muted d-block fw-bold">Escuela Agrícola Sagrados Corazones</small>
+                <small class="text-muted" id="date-display"></small>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="mb-5">
+            <div class="section-header" style="border-color: var(--pie-color);">
+                <i class="fa-solid fa-people-arrows section-icon" style="color: var(--pie-color);"></i>
+                <h2 class="section-title">Gestión de Casos y Seguimiento</h2>
+            </div>
+            <div class="row g-4">
+                
+                <div class="col-md-6">
+                    <a href="pie.html" class="app-card zone-pie">
+                        <div class="card-body-custom">
+                            <div class="app-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+                            <div class="app-info">
+                                <h5>Gestión PIE Centralizada</h5>
+                                <p>Registro de estudiantes, seguimiento de avances (PACI), FUR y reportes familiares.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a href="repitencia.html" class="app-card zone-pie">
+                        <div class="card-body-custom">
+                            <div class="app-icon"><i class="fa-solid fa-file-contract"></i></div>
+                            <div class="app-info">
+                                <h5>Gestor Decreto 67</h5>
+                                <p>Informes de evaluación diferenciada, actas de repitencia y planes de acompañamiento.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <div class="section-header" style="border-color: #0dcaf0;">
+                <i class="fa-solid fa-calculator section-icon" style="color: #0dcaf0;"></i>
+                <h2 class="section-title">Herramientas de Apoyo</h2>
+            </div>
+            <div class="row g-4">
+                
+                <div class="col-md-6 col-lg-4">
+                    <a href="calculadora_notas.html" class="app-card zone-calc">
+                        <div class="card-body-custom">
+                            <div class="app-icon"><i class="fa-solid fa-calculator"></i></div>
+                            <div class="app-info">
+                                <h5>Calculadora Notas</h5>
+                                <p>Simulación de escalas al 60% y ponderaciones.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <a href="salva.html" class="app-card zone-calc">
+                        <div class="card-body-custom">
+                            <div class="app-icon"><i class="fa-solid fa-life-ring"></i></div>
+                            <div class="app-info">
+                                <h5>Salva el Semestre</h5>
+                                <p>Proyección de notas mínimas para aprobación.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <a href="nem.html" class="app-card zone-calc">
+                        <div class="card-body-custom">
+                            <div class="app-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div class="app-info">
+                                <h5>Calculadora NEM</h5>
+                                <p>Estimación de puntaje ranking para orientación vocacional.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <p class="mb-0">Sistema de Gestión Integrado • Escuela Agrícola Sagrados Corazones</p>
+        <p class="mb-0 fw-bold text-secondary">Desarrollado por ProfeAle &copy; 2026</p>
+    </footer>
+
+    <script>
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date-display').textContent = new Date().toLocaleDateString('es-ES', dateOptions);
+    </script>
+</body>
+</html>
