@@ -3,174 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal PIE 2026</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Portal PIE - Escuela Agrícola SC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --pie-color: #6f42c1;     /* Morado PIE */
-            --pie-light: #e0cffc;
-            --support-color: #0dcaf0; /* Cian Apoyo */
-            --bg-color: #f3f0ff;      /* Fondo suave lavanda */
-        }
-        body { background-color: var(--bg-color); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f3ff; } /* Fondo lila muy suave */
         
-        /* HEADER */
-        .main-header {
-            background: white; border-bottom: 4px solid var(--pie-color);
-            padding: 1rem 0; margin-bottom: 2.5rem; box-shadow: 0 2px 10px rgba(111, 66, 193, 0.1);
+        /* Efectos de Tarjetas */
+        .portal-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            background: white;
         }
-        .school-logo { height: 65px; margin-right: 15px; }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
         
-        /* SECCIONES */
-        .section-header { 
-            display: flex; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.5rem;
-            border-bottom: 2px solid #dee2e6;
-        }
-        .section-title { font-size: 1.1rem; font-weight: 700; color: #495057; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
-        .section-icon { margin-right: 10px; font-size: 1.2rem; }
+        /* Colores por Categoría */
+        .card-main:hover { border-left-color: #7c3aed; }       /* Violeta Intenso */
+        .card-gestion:hover { border-left-color: #db2777; }    /* Rosa Fuerte */
+        .card-apoyo:hover { border-left-color: #0891b2; }      /* Cyan */
+        .card-recursos:hover { border-left-color: #ea580c; }   /* Naranja */
 
-        /* TARJETAS */
-        .app-card {
-            background: white; border: none; border-radius: 12px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            text-decoration: none; color: inherit; height: 100%; display: block;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05);
+        /* Estilo del Reloj */
+        .clock-container {
+            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
+            color: #fff;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
-        .app-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(111, 66, 193, 0.15); }
-        
-        .card-body-custom { padding: 1.5rem; display: flex; align-items: flex-start; gap: 15px; }
-        
-        .app-icon {
-            width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; flex-shrink: 0;
+        .digital-font {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
         }
-        
-        .app-info h5 { font-weight: 700; font-size: 1rem; margin-bottom: 4px; color: #212529; }
-        .app-info p { font-size: 0.8rem; color: #6c757d; margin: 0; line-height: 1.3; }
-
-        /* ESTILOS POR ZONA */
-        /* Zona Gestión PIE (Morado) */
-        .zone-pie .app-icon { background-color: var(--pie-light); color: var(--pie-color); }
-        .zone-pie:hover { border-left: 4px solid var(--pie-color); }
-
-        /* Zona Calculadoras (Azul/Cian) */
-        .zone-calc .app-icon { background-color: #cff4fc; color: #055160; }
-        .zone-calc:hover { border-left: 4px solid #0dcaf0; }
-
-        .footer { text-align: center; padding: 2rem; color: #adb5bd; font-size: 0.8rem; border-top: 1px solid #e9ecef; background: white; margin-top: auto;}
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-    <header class="main-header">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <img src="logo.jpg" alt="SS.CC." class="school-logo">
+    <header class="bg-white shadow-sm border-b border-violet-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="logo.jpg" class="h-12 w-auto object-contain bg-gray-50 rounded-full p-1 border" onerror="this.style.display='none'">
                 <div>
-                    <h1 class="h5 fw-bold mb-0 text-dark">Programa de Integración Escolar</h1>
-                    <span class="badge" style="background-color: var(--pie-color);">Equipo PIE 2026</span>
+                    <h1 class="text-lg font-bold text-gray-800 leading-tight">Portal PIE</h1>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Programa de Integración Escolar</p>
                 </div>
             </div>
-            <div class="text-end d-none d-md-block">
-                <small class="text-muted d-block fw-bold">Escuela Agrícola Sagrados Corazones</small>
-                <small class="text-muted" id="date-display"></small>
+            <div class="text-right">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-violet-100 text-violet-800 border border-violet-200">
+                    <span class="w-2 h-2 rounded-full bg-violet-500 animate-pulse"></span>
+                    Equipo de Apoyo
+                </span>
             </div>
         </div>
     </header>
 
-    <div class="container">
-
-        <div class="mb-5">
-            <div class="section-header" style="border-color: var(--pie-color);">
-                <i class="fa-solid fa-people-arrows section-icon" style="color: var(--pie-color);"></i>
-                <h2 class="section-title">Gestión de Casos y Seguimiento</h2>
+    <div class="clock-container py-8 mb-8 border-b-4 border-violet-600">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <p class="text-violet-200 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-1">Hora Oficial</p>
+            <div id="clock-display" class="digital-font text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-none text-white">
+                00:00:00
             </div>
-            <div class="row g-4">
-                
-                <div class="col-md-6">
-                    <a href="pie.html" class="app-card zone-pie">
-                        <div class="card-body-custom">
-                            <div class="app-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
-                            <div class="app-info">
-                                <h5>Gestión PIE Centralizada</h5>
-                                <p>Registro de estudiantes, seguimiento de avances (PACI), FUR y reportes familiares.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6">
-                    <a href="repitencia.html" class="app-card zone-pie">
-                        <div class="card-body-custom">
-                            <div class="app-icon"><i class="fa-solid fa-file-contract"></i></div>
-                            <div class="app-info">
-                                <h5>Gestor Decreto 67</h5>
-                                <p>Informes de evaluación diferenciada, actas de repitencia y planes de acompañamiento.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
+            <p id="date-display" class="text-violet-100 text-lg md:text-xl font-medium mt-2 capitalize"></p>
         </div>
-
-        <div class="mb-4">
-            <div class="section-header" style="border-color: #0dcaf0;">
-                <i class="fa-solid fa-calculator section-icon" style="color: #0dcaf0;"></i>
-                <h2 class="section-title">Herramientas de Apoyo</h2>
-            </div>
-            <div class="row g-4">
-                
-                <div class="col-md-6 col-lg-4">
-                    <a href="calculadora_notas.html" class="app-card zone-calc">
-                        <div class="card-body-custom">
-                            <div class="app-icon"><i class="fa-solid fa-calculator"></i></div>
-                            <div class="app-info">
-                                <h5>Calculadora Notas</h5>
-                                <p>Simulación de escalas al 60% y ponderaciones.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <a href="salva.html" class="app-card zone-calc">
-                        <div class="card-body-custom">
-                            <div class="app-icon"><i class="fa-solid fa-life-ring"></i></div>
-                            <div class="app-info">
-                                <h5>Salva el Semestre</h5>
-                                <p>Proyección de notas mínimas para aprobación.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4">
-                    <a href="nem.html" class="app-card zone-calc">
-                        <div class="card-body-custom">
-                            <div class="app-icon"><i class="fa-solid fa-ranking-star"></i></div>
-                            <div class="app-info">
-                                <h5>Calculadora NEM</h5>
-                                <p>Estimación de puntaje ranking para orientación vocacional.</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-
     </div>
 
-    <footer class="footer">
-        <p class="mb-0">Sistema de Gestión Integrado • Escuela Agrícola Sagrados Corazones</p>
-        <p class="mb-0 fw-bold text-secondary">Desarrollado por ProfeAle &copy; 2026</p>
+    <main class="flex-grow max-w-7xl mx-auto px-4 pb-12 w-full">
+        
+        <div class="mb-10">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-violet-300">
+                <i class="fa-solid fa-layer-group text-violet-600"></i>
+                Sistema Central
+            </h2>
+            
+            <a href="pie.html" class="portal-card card-main block p-6 rounded-xl shadow-md border border-violet-200 bg-white group relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-violet-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">NUEVO 2026</div>
+                <div class="flex items-center gap-6">
+                    <div class="w-20 h-20 bg-violet-100 text-violet-700 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors text-3xl shadow-sm">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-2xl group-hover:text-violet-700 transition">Gestor PIE Colaborativo</h3>
+                        <p class="text-gray-500 mt-1">Acceso a Nómina de Estudiantes, Bitácora de Avance y <strong>Módulo de Admisión 2026</strong>.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="mb-10">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-pink-300">
+                <i class="fa-solid fa-folder-open text-pink-600"></i>
+                Documentación & Casos
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <a href="bitacora.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center group-hover:bg-pink-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Bitácora Aula</h3>
+                        <p class="text-sm text-gray-500 mt-1">Registro de co-docencia.</p>
+                    </div>
+                </a>
+
+                <a href="entrevistas.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-fuchsia-50 text-fuchsia-600 rounded-full flex items-center justify-center group-hover:bg-fuchsia-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Entrevistas</h3>
+                        <p class="text-sm text-gray-500 mt-1">Registro de atención apoderados.</p>
+                    </div>
+                </a>
+
+                <a href="repitencia.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Decreto 67</h3>
+                        <p class="text-sm text-gray-500 mt-1">Informes y actas PACI.</p>
+                    </div>
+                </a>
+
+                <a href="citacion.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Citar Apoderado</h3>
+                        <p class="text-sm text-gray-500 mt-1">Generar colilla de citación.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-cyan-300">
+                <i class="fa-solid fa-toolbox text-cyan-600"></i>
+                Herramientas de Apoyo
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <a href="calculadora_notas.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-cyan-50 text-cyan-600 rounded-full flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Proyección Notas</h3>
+                        <p class="text-sm text-gray-500 mt-1">Cálculo de promedios.</p>
+                    </div>
+                </a>
+
+                <a href="salva.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-life-ring"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Salva Semestre</h3>
+                        <p class="text-sm text-gray-500 mt-1">Meta de nota mínima.</p>
+                    </div>
+                </a>
+
+                <a href="nem.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-ranking-star"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">NEM</h3>
+                        <p class="text-sm text-gray-500 mt-1">Ranking y puntajes.</p>
+                    </div>
+                </a>
+
+                <a href="prestamo.html" class="portal-card card-recursos p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
+                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors text-xl shadow-sm">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Pedir Recursos</h3>
+                        <p class="text-sm text-gray-500 mt-1">Tablets y Laboratorio.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-gray-500">Sistema de Gestión PIE &bull; Escuela Agrícola Sagrados Corazones</p>
+            <p class="text-xs text-gray-400 mt-1">Desarrollado por ProfeAle &copy; 2025</p>
+        </div>
     </footer>
 
     <script>
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('date-display').textContent = new Date().toLocaleDateString('es-ES', dateOptions);
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('es-CL', dateOptions);
+            document.getElementById('clock-display').textContent = timeString;
+            document.getElementById('date-display').textContent = dateString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
+
 </body>
 </html>
