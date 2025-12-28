@@ -25,6 +25,7 @@
         
         /* Colores por Categoría */
         .card-main:hover { border-left-color: #7c3aed; }       /* Violeta Intenso */
+        .card-planif:hover { border-left-color: #059669; }     /* Esmeralda */
         .card-gestion:hover { border-left-color: #db2777; }    /* Rosa Fuerte */
         .card-apoyo:hover { border-left-color: #0891b2; }      /* Cyan */
         .card-recursos:hover { border-left-color: #ea580c; }   /* Naranja */
@@ -80,18 +81,33 @@
                 Sistema Central
             </h2>
             
-            <a href="pie.html" class="portal-card card-main block p-6 rounded-xl shadow-md border border-violet-200 bg-white group relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-violet-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">NUEVO 2026</div>
-                <div class="flex items-center gap-6">
-                    <div class="w-20 h-20 bg-violet-100 text-violet-700 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors text-3xl shadow-sm">
-                        <i class="fa-solid fa-network-wired"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="pie.html" class="portal-card card-main block p-6 rounded-xl shadow-md border border-violet-200 bg-white group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-violet-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">NUEVO 2026</div>
+                    <div class="flex items-center gap-6">
+                        <div class="w-20 h-20 bg-violet-100 text-violet-700 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors text-3xl shadow-sm">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-xl md:text-2xl group-hover:text-violet-700 transition">Gestor PIE</h3>
+                            <p class="text-gray-500 mt-1 text-sm md:text-base">Nómina, Bitácora y <strong>Admisión 2026</strong>.</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-2xl group-hover:text-violet-700 transition">Gestor PIE Colaborativo</h3>
-                        <p class="text-gray-500 mt-1">Acceso a Nómina de Estudiantes, Bitácora de Avance y <strong>Módulo de Admisión 2026</strong>.</p>
+                </a>
+
+                <a href="digital.html" class="portal-card card-planif block p-6 rounded-xl shadow-md border border-green-200 bg-white group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">WORD</div>
+                    <div class="flex items-center gap-6">
+                        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors text-3xl shadow-sm">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800 text-xl md:text-2xl group-hover:text-emerald-700 transition">Planificador</h3>
+                            <p class="text-gray-500 mt-1 text-sm md:text-base">Planificación clase a clase con <strong>exportación a Word</strong>.</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
 
         <div class="mb-10">
@@ -107,7 +123,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-gray-800 text-lg">Bitácora Aula</h3>
-                        <p class="text-sm text-gray-500 mt-1">Registro de co-docencia.</p>
+                        <p class="text-sm text-gray-500 mt-1">Registro de planificacion anual.</p>
                     </div>
                 </a>
 
@@ -127,7 +143,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-gray-800 text-lg">Decreto 67</h3>
-                        <p class="text-sm text-gray-500 mt-1">Informes y actas PACI.</p>
+                        <p class="text-sm text-gray-500 mt-1">Informes de Repitencia.</p>
                     </div>
                 </a>
 
