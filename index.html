@@ -5,13 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal PIE - Escuela Agrícola SC</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f5f3ff; } /* Fondo lila muy suave */
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background-color: #f5f3ff; /* Lila Base */
+            /* Patrón de puntitos lila */
+            background-image: radial-gradient(#d8b4fe 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
         
-        /* Efectos de Tarjetas */
+        /* Efecto Cristal */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.1), 0 8px 10px -6px rgba(124, 58, 237, 0.1);
+        }
+
         .portal-card {
             transition: all 0.3s ease;
             cursor: pointer;
@@ -20,217 +33,218 @@
         }
         .portal-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.2);
         }
-        
-        /* Colores por Categoría */
-        .card-main:hover { border-left-color: #7c3aed; }       /* Violeta Intenso */
-        .card-planif:hover { border-left-color: #059669; }     /* Esmeralda */
-        .card-gestion:hover { border-left-color: #db2777; }    /* Rosa Fuerte */
-        .card-apoyo:hover { border-left-color: #0891b2; }      /* Cyan */
-        .card-recursos:hover { border-left-color: #ea580c; }   /* Naranja */
 
-        /* Estilo del Reloj */
-        .clock-container {
-            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%);
-            color: #fff;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        /* Colores Hover */
+        .hover-purple:hover { border-left-color: #9333ea; }
+        .hover-pink:hover { border-left-color: #db2777; }
+        .hover-blue:hover { border-left-color: #2563eb; }
+        .hover-indigo:hover { border-left-color: #4f46e5; }
+        .hover-teal:hover { border-left-color: #0d9488; }
+        .hover-orange:hover { border-left-color: #ea580c; }
+
+        .title-font { font-family: 'Dancing Script', cursive; }
+
+        /* RELOJ ANÁLOGO GRANDE */
+        .analog-clock-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            border: 8px solid rgba(255, 255, 255, 0.9);
+            box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.05), 0 10px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
         }
-        .digital-font {
-            font-family: 'JetBrains Mono', monospace;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+
+        .clock-number {
+            position: absolute; width: 100%; height: 100%; text-align: center;
+            font-size: 1.5rem; font-weight: 700; color: #6b21a8; padding-top: 10px;
+        }
+
+        /* Manecillas */
+        .hand {
+            position: absolute; bottom: 50%; left: 50%;
+            transform-origin: bottom center; border-radius: 4px; z-index: 10;
+        }
+        .hour-hand { width: 6px; height: 50px; background: #4c1d95; margin-left: -3px; }
+        .minute-hand { width: 4px; height: 70px; background: #7c3aed; margin-left: -2px; }
+        .second-hand { width: 2px; height: 80px; background: #db2777; margin-left: -1px; z-index: 11; }
+        .center-dot {
+            position: absolute; top: 50%; left: 50%; width: 12px; height: 12px;
+            background: #db2777; border-radius: 50%; transform: translate(-50%, -50%);
+            z-index: 12; border: 2px solid white;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col text-slate-700">
 
-    <header class="bg-white shadow-sm border-b border-violet-200 sticky top-0 z-50">
+    <header class="bg-white/90 backdrop-blur-md border-b border-purple-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="logo.jpg" class="h-12 w-auto object-contain bg-gray-50 rounded-full p-1 border" onerror="this.style.display='none'">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 border-2 border-purple-200 shadow-sm">
+                    <i class="fa-solid fa-puzzle-piece text-2xl"></i>
+                </div>
                 <div>
-                    <h1 class="text-lg font-bold text-gray-800 leading-tight">Portal PIE</h1>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Programa de Integración Escolar</p>
+                    <h1 class="text-2xl font-bold text-purple-700 title-font">Portal PIE</h1>
+                    <p class="text-xs text-purple-500 font-bold uppercase tracking-wider">Programa de Integración Escolar</p>
                 </div>
             </div>
-            <div class="text-right">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-violet-100 text-violet-800 border border-violet-200">
-                    <span class="w-2 h-2 rounded-full bg-violet-500 animate-pulse"></span>
-                    Equipo de Apoyo
+            <div class="hidden md:block">
+                <span class="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-xs font-bold border border-purple-100">
+                    Escuela Agrícola SC
                 </span>
             </div>
         </div>
     </header>
 
-    <div class="clock-container py-8 mb-8 border-b-4 border-violet-600">
-        <div class="max-w-4xl mx-auto text-center px-4">
-            <p class="text-violet-200 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-1">Hora Oficial</p>
-            <div id="clock-display" class="digital-font text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-none text-white">
-                00:00:00
+    <div class="max-w-4xl mx-auto w-full mt-10 px-4 relative mb-12">
+        <div class="glass-panel rounded-full p-8 text-center shadow-xl border-4 border-white relative overflow-hidden group max-w-sm mx-auto">
+            <p class="text-purple-400 font-bold tracking-[0.3em] text-xs uppercase mb-6">Hora Oficial</p>
+            <div class="analog-clock-container" id="analog-clock">
+                <div class="center-dot"></div>
+                <div class="hand hour-hand" id="hour-hand"></div>
+                <div class="hand minute-hand" id="minute-hand"></div>
+                <div class="hand second-hand" id="second-hand"></div>
             </div>
-            <p id="date-display" class="text-violet-100 text-lg md:text-xl font-medium mt-2 capitalize"></p>
+            <p id="date-display" class="text-purple-800 text-lg font-bold mt-6 capitalize font-serif italic"></p>
         </div>
     </div>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 pb-12 w-full">
+    <main class="flex-grow max-w-7xl mx-auto px-4 w-full pb-20">
         
-        <div class="mb-10">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-violet-300">
-                <i class="fa-solid fa-layer-group text-violet-600"></i>
-                Sistema Central
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="pie.html" class="portal-card card-main block p-6 rounded-xl shadow-md border border-violet-200 bg-white group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-violet-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">NUEVO 2026</div>
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-violet-100 text-violet-700 rounded-full flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors text-3xl shadow-sm">
-                            <i class="fa-solid fa-network-wired"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-xl md:text-2xl group-hover:text-violet-700 transition">Gestor PIE</h3>
-                            <p class="text-gray-500 mt-1 text-sm md:text-base">Nómina, Bitácora y <strong>Admisión 2026</strong>.</p>
-                        </div>
-                    </div>
-                </a>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                <a href="digital.html" class="portal-card card-planif block p-6 rounded-xl shadow-md border border-green-200 bg-white group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold">WORD</div>
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors text-3xl shadow-sm">
-                            <i class="fa-solid fa-calendar-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-xl md:text-2xl group-hover:text-emerald-700 transition">Planificador</h3>
-                            <p class="text-gray-500 mt-1 text-sm md:text-base">Planificación clase a clase con <strong>exportación a Word</strong>.</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <a href="pie.html" class="portal-card p-5 rounded-2xl shadow-sm border border-purple-100 flex items-center gap-4 group hover-purple">
+                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-purple-700">Gestor PIE</h3><p class="text-xs text-gray-500">Colaborativo.</p></div>
+            </a>
+
+            <a href="repitencia.html" class="portal-card p-5 rounded-2xl shadow-sm border border-pink-100 flex items-center gap-4 group hover-pink">
+                <div class="w-12 h-12 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center group-hover:bg-pink-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-pink-700">Decreto 67</h3><p class="text-xs text-gray-500">Repitencias.</p></div>
+            </a>
+
+            <a href="entrevistas.html" class="portal-card p-5 rounded-2xl shadow-sm border border-blue-100 flex items-center gap-4 group hover-blue">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-clipboard-question"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-blue-700">Entrevistas</h3><p class="text-xs text-gray-500">Registro Casos.</p></div>
+            </a>
+
+            <a href="app_profes.html" class="portal-card p-5 rounded-2xl shadow-sm border border-indigo-100 flex items-center gap-4 group hover-indigo">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-indigo-700">Docentes</h3><p class="text-xs text-gray-500">Libro Clases.</p></div>
+            </a>
+
+            <a href="prestamo.html" class="portal-card p-5 rounded-2xl shadow-sm border border-teal-100 flex items-center gap-4 group hover-teal">
+                <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-laptop"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-teal-700">Recursos</h3><p class="text-xs text-gray-500">Tablets y PC.</p></div>
+            </a>
+
+            <a href="salva.html" class="portal-card p-5 rounded-2xl shadow-sm border border-green-100 flex items-center gap-4 group hover-teal">
+                <div class="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-life-ring"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-green-700">Proyección</h3><p class="text-xs text-gray-500">Salva Semestre.</p></div>
+            </a>
+
+            <a href="calculadora_notas.html" class="portal-card p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4 group hover-teal">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-emerald-700">Notas Pro</h3><p class="text-xs text-gray-500">Promedios.</p></div>
+            </a>
+
+            <a href="nem.html" class="portal-card p-5 rounded-2xl shadow-sm border border-cyan-100 flex items-center gap-4 group hover-blue">
+                <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-ranking-star"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-cyan-700">NEM</h3><p class="text-xs text-gray-500">Ranking.</p></div>
+            </a>
+
+            <a href="citacion.html" class="portal-card p-5 rounded-2xl shadow-sm border border-orange-100 flex items-center gap-4 group hover-orange">
+                <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-orange-700">Citaciones</h3><p class="text-xs text-gray-500">Apoderados.</p></div>
+            </a>
+
+            <a href="bitacora.html" class="portal-card p-5 rounded-2xl shadow-sm border border-violet-100 flex items-center gap-4 group hover-purple">
+                <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-violet-700">Bitácora</h3><p class="text-xs text-gray-500">Curricular.</p></div>
+            </a>
+
+            <a href="digital.html" class="portal-card p-5 rounded-2xl shadow-sm border border-fuchsia-100 flex items-center gap-4 group hover-pink">
+                <div class="w-12 h-12 rounded-xl bg-fuchsia-50 text-fuchsia-600 flex items-center justify-center group-hover:bg-fuchsia-600 group-hover:text-white transition-colors text-xl">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <div><h3 class="font-bold text-gray-800 group-hover:text-fuchsia-700">Planificación</h3><p class="text-xs text-gray-500">Digital.</p></div>
+            </a>
+
         </div>
-
-        <div class="mb-10">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-pink-300">
-                <i class="fa-solid fa-folder-open text-pink-600"></i>
-                Documentación & Casos
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <a href="bitacora.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center group-hover:bg-pink-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Bitácora Aula</h3>
-                        <p class="text-sm text-gray-500 mt-1">Registro de planificacion anual.</p>
-                    </div>
-                </a>
-
-                <a href="entrevistas.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-fuchsia-50 text-fuchsia-600 rounded-full flex items-center justify-center group-hover:bg-fuchsia-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-comments"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Entrevistas</h3>
-                        <p class="text-sm text-gray-500 mt-1">Registro de atención apoderados.</p>
-                    </div>
-                </a>
-
-                <a href="repitencia.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-file-contract"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Decreto 67</h3>
-                        <p class="text-sm text-gray-500 mt-1">Informes de Repitencia.</p>
-                    </div>
-                </a>
-
-                <a href="citacion.html" class="portal-card card-gestion p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-envelope-open-text"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Citar Apoderado</h3>
-                        <p class="text-sm text-gray-500 mt-1">Generar colilla de citación.</p>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-
-        <div>
-            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-2 border-cyan-300">
-                <i class="fa-solid fa-toolbox text-cyan-600"></i>
-                Herramientas de Apoyo
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <a href="calculadora_notas.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-cyan-50 text-cyan-600 rounded-full flex items-center justify-center group-hover:bg-cyan-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-calculator"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Proyección Notas</h3>
-                        <p class="text-sm text-gray-500 mt-1">Cálculo de promedios.</p>
-                    </div>
-                </a>
-
-                <a href="salva.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-life-ring"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Salva Semestre</h3>
-                        <p class="text-sm text-gray-500 mt-1">Meta de nota mínima.</p>
-                    </div>
-                </a>
-
-                <a href="nem.html" class="portal-card card-apoyo p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-ranking-star"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">NEM</h3>
-                        <p class="text-sm text-gray-500 mt-1">Ranking y puntajes.</p>
-                    </div>
-                </a>
-
-                <a href="prestamo.html" class="portal-card card-recursos p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center gap-4 group">
-                    <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors text-xl shadow-sm">
-                        <i class="fa-solid fa-laptop"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800 text-lg">Pedir Recursos</h3>
-                        <p class="text-sm text-gray-500 mt-1">Tablets y Laboratorio.</p>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <footer class="bg-white/80 border-t border-purple-100 py-6 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm text-gray-500">Sistema de Gestión PIE &bull; Escuela Agrícola Sagrados Corazones</p>
-            <p class="text-xs text-gray-400 mt-1">Desarrollado por ProfeAle &copy; 2025</p>
+            <p class="text-sm text-gray-500 font-bold">Sistema de Gestión PIE &bull; Escuela Agrícola Sagrados Corazones</p>
+            <p class="text-xs text-purple-400 mt-1">Desarrollado por ProfeAle &copy; 2026</p>
         </div>
     </footer>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = now.toLocaleDateString('es-CL', dateOptions);
-            document.getElementById('clock-display').textContent = timeString;
-            document.getElementById('date-display').textContent = dateString;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const clockContainer = document.getElementById('analog-clock');
+            for (let i = 1; i <= 12; i++) {
+                const num = document.createElement('div');
+                num.className = 'clock-number';
+                num.style.transform = `rotate(${i * 30}deg)`;
+                const innerSpan = document.createElement('span');
+                innerSpan.innerText = i;
+                innerSpan.style.display = 'inline-block';
+                innerSpan.style.transform = `rotate(-${i * 30}deg)`;
+                num.appendChild(innerSpan);
+                clockContainer.appendChild(num);
+            }
 
+            const hourHand = document.getElementById('hour-hand');
+            const minuteHand = document.getElementById('minute-hand');
+            const secondHand = document.getElementById('second-hand');
+            const dateDisplay = document.getElementById('date-display');
+
+            function updateClock() {
+                const now = new Date();
+                const seconds = now.getSeconds();
+                const minutes = now.getMinutes();
+                const hours = now.getHours();
+
+                const secondsDegrees = ((seconds / 60) * 360);
+                const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6);
+                const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30);
+
+                secondHand.style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
+                hourHand.style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
+
+                const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+                dateDisplay.textContent = now.toLocaleDateString('es-CL', dateOptions);
+            }
+
+            updateClock();
+            setInterval(updateClock, 1000);
+        });
+    </script>
 </body>
 </html>
