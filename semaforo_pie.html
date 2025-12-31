@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor PIE v4.2 - Acceso Oficial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .print-only { display: none; }
+        @media print {
+            .no-print { display: none !important; }
+            .printable-area { display: block !important; width: 100%; position: static; }
+            body { background-color: white; }
+            .print-only { display: block; }
+            button { display: none !important; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <input type="file" id="logoInput" accept="image/*" class="hidden">
+
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-8 text-center border-t-4 border-indigo-600">
+            <img id="loginLogo" src="logo.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3209/3209265.png'" class="h-24 mx-auto mb-4 object-contain">
+            <h1 class="text-2xl font-bold text-slate-800">Coordinación PIE</h1>
+            <p class="text-slate-500 text-sm mb-6">Escuela Agrícola Sagrados Corazones</p>
+            
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-left text-xs font-bold text-slate-500 mb-1">Correo Institucional</label>
+                    <input type="email" id="emailInput" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="nombre@eduvillaalegre.cl" required>
+                </div>
+                <div>
+                    <label class="block text-left text-xs font-bold text-slate-500 mb-1">Contraseña</label>
+                    <input type="password" id="passwordInput" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="••••••" required>
+                </div>
+                <div id="loginError" class="text-rose-500 text-xs font-bold hidden"></div>
+                <button type="submit" id="btnLogin" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition shadow-lg">
+                    Entrar al Sistema
+                </button>
+            </form>
+            <p class="text-[10px] text-slate-400 mt-4">Acceso exclusivo equipo PIE / UTP</p>
+        </div>
+    </div>
+
+    <nav class="bg-white shadow-sm border-b border-slate-200 px-6 py-3 flex justify-between items-center no-print">
+        <div class="flex items-center gap-3">
+            <img id="navLogo" src="logo.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3209/3209265.png'" class="h-12 object-contain">
+            <div>
+                <h1 class="font-bold text-slate-700 leading-tight">Gestor Colaborativo PIE</h1>
+                <p class="text-xs text-slate-400" id="userDisplay">Conectando...</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button id="loadLogoBtn" class="bg-amber-100 text-amber-700 hover:bg-amber-200 px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 border border-amber-200 transition">
+                <span>📎</span> Cargar Logo
+            </button>
+            <button onclick="document.getElementById('teachersModal').classList.remove('hidden')" class="bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition">
+                <span>⚙️</span> Equipo
+            </button>
+            <button id="btnLogout" class="text-rose-500 font-bold text-sm hover:underline ml-2">Salir</button>
+        </div>
+    </nav>
+
+    <div class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-4 space-y-6 no-print">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-700 mb-4 border-b pb-2">⏱️ Registro de Sesión</h2>
+                <div class="space-y-4">
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Docente</label><select id="teacherSelect" class="w-full p-2 border rounded bg-slate-50 font-medium"><option value="">Cargando docentes...</option></select></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Citación</label><input type="time" id="scheduledTime" class="w-full p-2 border rounded text-center"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Llegada</label><input type="time" id="arrivalTime" class="w-full p-2 border rounded text-center"></div>
+                    </div>
+                    <div id="delayDisplay" class="text-center text-xs font-bold hidden bg-slate-100 p-2 rounded"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Estado Material</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setStatus('green')" id="btnGreen" class="status-btn p-2 rounded border hover:bg-emerald-50 text-xs font-bold text-emerald-700 border-emerald-200">✅ Cumple</button>
+                            <button onclick="setStatus('yellow')" id="btnYellow" class="status-btn p-2 rounded border hover:bg-amber-50 text-xs font-bold text-amber-700 border-amber-200">⚠️ Atraso</button>
+                            <button onclick="setStatus('red')" id="btnRed" class="status-btn p-2 rounded border hover:bg-rose-50 text-xs font-bold text-rose-700 border-rose-200">❌ No Cumple</button>
+                        </div>
+                    </div>
+                    <div><label class="block text-xs font-bold text-slate-500 uppercase mb-1">Detalle / Acuerdos</label><textarea id="commitmentText" class="w-full p-2 border rounded text-sm h-24 resize-none" placeholder="Ej: Entrega prueba 1° Medio adecuada..."></textarea></div>
+                    <button id="saveLogBtn" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition shadow-md">💾 Guardar Registro</button>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-xs font-bold text-slate-400 uppercase mb-3">Acciones Rápidas</h3>
+                <button id="whatsappBtn" class="w-full bg-emerald-500 text-white font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-emerald-600 transition mb-3"><span>📱</span> Enviar Recordatorio WhatsApp</button>
+                <button id="generateWarningBtn" class="w-full bg-rose-500 text-white font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-rose-600 transition shadow-md mb-3"><span>📄</span> Descargar PDF Incumplimiento</button>
+                <button id="emailUtpBtn" class="w-full bg-purple-600 text-white font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-700 transition shadow-md"><span>📧</span> Enviar a UTP</button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-8 space-y-6 printable-area">
+            <div id="printHeader" class="print-only mb-4 border-b pb-4 flex justify-between items-center">
+                <img id="printLogo" src="logo.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3209/3209265.png'" style="height: 60px;">
+                <div class="text-right"><h1 class="text-xl font-bold">Escuela Agrícola Sagrados Corazones</h1><p class="text-sm font-medium text-slate-600">Reporte de Gestión PIE</p><p class="text-xs mt-1" id="printDateRange"></p></div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-end no-print">
+                <div><label class="block text-xs font-bold text-slate-500">Filtrar Docente</label><select id="filterTeacher" class="p-2 border rounded text-sm w-40"><option value="all">Todos</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-500">Desde</label><input type="date" id="filterStart" class="p-2 border rounded text-sm"></div>
+                <div><label class="block text-xs font-bold text-slate-500">Hasta</label><input type="date" id="filterEnd" class="p-2 border rounded text-sm"></div>
+                <div class="flex-grow flex justify-end"><button onclick="window.print()" class="bg-slate-800 text-white px-5 py-2 rounded font-bold text-sm hover:bg-slate-900 flex items-center gap-2"><span>🖨️</span> Imprimir Reporte</button></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <table class="w-full text-sm text-left text-gray-500"><thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b"><tr><th class="px-4 py-3">Fecha</th><th class="px-4 py-3">Docente</th><th class="px-4 py-3 text-center">Puntualidad</th><th class="px-4 py-3 text-center">Material</th><th class="px-4 py-3">Detalle</th><th class="px-4 py-3 text-right no-print">Acción</th></tr></thead><tbody id="logsTableBody"></tbody></table>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 page-break-avoid"><h3 class="text-sm font-bold text-slate-500 uppercase mb-4">Estadísticas de Cumplimiento</h3><div class="h-64"><canvas id="complianceChart"></canvas></div></div>
+        </div>
+    </div>
+
+    <div id="teachersModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 no-print">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6"><h2 class="text-lg font-bold mb-4">Gestionar Equipo Docente</h2><div class="flex gap-2 mb-4"><input id="newTeacherName" type="text" placeholder="Nombre" class="flex-1 p-2 border rounded text-sm"><input id="newTeacherPhone" type="tel" placeholder="569..." class="w-24 p-2 border rounded text-sm"><button id="addTeacherBtn" class="bg-green-500 text-white px-3 rounded font-bold hover:bg-green-600">+</button></div><ul id="teachersList" class="space-y-2 max-h-60 overflow-y-auto mb-4 border-t pt-2"></ul><div class="text-right"><button onclick="document.getElementById('teachersModal').classList.add('hidden')" class="text-slate-500 font-bold hover:underline">Cerrar</button></div></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- LISTA BLANCA DE ACCESO OFICIAL ---
+        const AUTHORIZED_EMAILS = [
+            'daniela.fuentes@eduvillaalegre.cl',
+            'nayadeth.perez@eduvillaalegre.cl',
+            'integracion.veloz@eduvillaalegre.cl',
+            'utp.veloz@gmail.com',
+            'admin@profeale.cl' // Mantengo tu admin por si acaso
+        ];
+
+        const firebaseConfig = { apiKey: "AIzaSyAFp6biz1UTr9Ehaudkpe7QyTFVbdQz5Sc", authDomain: "asistencia-mi-clase.firebaseapp.com", projectId: "asistencia-mi-clase", storageBucket: "asistencia-mi-clase.appspot.com", messagingSenderId: "552398254230", appId: "1:552398254230:web:c58dd07e5ceeb67e0912b7", measurementId: "G-MYR01HM1YE" };
+        let app, db, auth, userId, teachersData=[], logsData=[], currentStatus=null, chartInstance=null, safeLogoBase64=null;
+        const el = (id) => document.getElementById(id);
+
+        async function init() {
+            app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
+            const date = new Date(); el('filterStart').value = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0]; el('filterEnd').value = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString().split('T')[0];
+            const storedLogo = localStorage.getItem('pie_logo_base64'); if (storedLogo) { safeLogoBase64 = storedLogo; updateLogoUI(storedLogo); }
+
+            el('loginForm').onsubmit = handleSecureLogin;
+            onAuthStateChanged(auth, (user) => { if(user) { userId = user.uid; el('userDisplay').textContent = user.email; el('loginOverlay').classList.add('hidden'); loadData(); } else { el('loginOverlay').classList.remove('hidden'); } });
+
+            el('saveLogBtn').onclick = saveLog; el('addTeacherBtn').onclick = addTeacher; 
+            el('whatsappBtn').onclick = sendWhatsapp; el('btnLogout').onclick = () => signOut(auth).then(()=>location.reload());
+            el('filterTeacher').onchange = renderUI; el('filterStart').onchange = renderUI; el('filterEnd').onchange = renderUI;
+            ['scheduledTime', 'arrivalTime'].forEach(id => el(id).addEventListener('change', checkDelay));
+            el('generateWarningBtn').onclick = () => generateWarningPDF(false); el('emailUtpBtn').onclick = sendEmailToUTP;
+            el('loadLogoBtn').onclick = () => el('logoInput').click(); el('logoInput').onchange = (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = (evt) => { const base64 = evt.target.result; safeLogoBase64 = base64; try { localStorage.setItem('pie_logo_base64', base64); } catch(e){} updateLogoUI(base64); alert("✅ Logo cargado y guardado."); }; reader.readAsDataURL(file); } };
+        }
+
+        async function handleSecureLogin(e) {
+            e.preventDefault();
+            const email = el('emailInput').value.trim().toLowerCase(); // Convertir a minúsculas
+            const pass = el('passwordInput').value.trim();
+            const errorDiv = el('loginError');
+            errorDiv.classList.add('hidden');
+
+            // Normalizamos la lista blanca también a minúsculas para comparar
+            const authorizedLower = AUTHORIZED_EMAILS.map(e => e.toLowerCase());
+
+            if (!authorizedLower.includes(email)) {
+                errorDiv.textContent = "⛔ Acceso Denegado: Correo no autorizado.";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    if(confirm("Bienvenido(a). Es su primer ingreso autorizado.\n\n¿Crear contraseña ahora?")) {
+                        try { await createUserWithEmailAndPassword(auth, email, pass); alert("✅ Cuenta creada. Acceso concedido."); } 
+                        catch (createErr) { errorDiv.textContent = "Error: " + createErr.message; errorDiv.classList.remove('hidden'); }
+                    } else { errorDiv.textContent = "Usuario no encontrado."; errorDiv.classList.remove('hidden'); }
+                } else { errorDiv.textContent = "Error: " + error.message; errorDiv.classList.remove('hidden'); }
+            }
+        }
+
+        function updateLogoUI(base64) { el('loginLogo').src = base64; el('navLogo').src = base64; el('printLogo').src = base64; }
+        function loadData() { onSnapshot(doc(db, `registros_pie/${userId}/config/teachers`), (docSnap) => { if(docSnap.exists()) teachersData = docSnap.data().list || []; updateTeacherSelects(); }); onSnapshot(doc(db, `registros_pie/${userId}/bitacora/master`), (docSnap) => { if(docSnap.exists()) logsData = docSnap.data().logs || []; renderUI(); }); }
+        async function addTeacher() { const name = el('newTeacherName').value.trim(), phone = el('newTeacherPhone').value.trim(); if(!name) return alert("Falta nombre"); await setDoc(doc(db, `registros_pie/${userId}/config/teachers`), { list: arrayUnion({name, phone}) }, { merge: true }); el('newTeacherName').value=''; el('newTeacherPhone').value=''; }
+        async function removeTeacher(name, phone) { if(confirm(`¿Eliminar?`)) await setDoc(doc(db, `registros_pie/${userId}/config/teachers`), { list: arrayRemove({name, phone}) }, { merge: true }); }
+        function updateTeacherSelects() { const mainSel = el('teacherSelect'), filterSel = el('filterTeacher'), prevMain = mainSel.value, prevFilter = filterSel.value; mainSel.innerHTML = '<option value="">Seleccionar...</option>' + teachersData.map(t => `<option value="${t.name}" data-phone="${t.phone}">${t.name}</option>`).join(''); filterSel.innerHTML = '<option value="all">Todos</option>' + teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join(''); mainSel.value = prevMain; filterSel.value = prevFilter; el('teachersList').innerHTML = teachersData.map(t => `<li class="flex justify-between items-center bg-slate-50 p-2 rounded border"><span>${t.name} <span class="text-xs text-gray-400">(${t.phone})</span></span><button onclick="window.removeTeacherWrapper('${t.name}', '${t.phone}')" class="text-red-500 font-bold">×</button></li>`).join(''); } window.removeTeacherWrapper = removeTeacher;
+        function checkDelay() { const sched = el('scheduledTime').value, arriv = el('arrivalTime').value, disp = el('delayDisplay'); if(sched && arriv) { const diff = (new Date(`2000-01-01T${arriv}`) - new Date(`2000-01-01T${sched}`)) / 60000; disp.classList.remove('hidden'); if(diff > 5) disp.innerHTML = `<span class="text-red-600">🚨 ${diff} min atraso</span>`; else if(diff < -5) disp.innerHTML = `<span class="text-emerald-600">⭐ ${Math.abs(diff)} min antes</span>`; else disp.innerHTML = `<span class="text-emerald-600">✅ Puntual</span>`; } else disp.classList.add('hidden'); }
+        window.setStatus = (s) => { currentStatus = s; document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-400')); el({'green':'btnGreen','yellow':'btnYellow','red':'btnRed'}[s]).classList.add('ring-2', 'ring-offset-2', 'ring-slate-400'); }
+        async function saveLog() { const teacher = el('teacherSelect').value; if(!teacher) return alert("Selecciona docente"); const newLog = { id: Date.now(), date: new Date().toISOString().split('T')[0], teacher, scheduled: el('scheduledTime').value, arrival: el('arrivalTime').value, material: currentStatus || 'none', text: el('commitmentText').value, isLate: (el('scheduledTime').value && el('arrivalTime').value && (new Date(`2000-01-01T${el('arrivalTime').value}`) - new Date(`2000-01-01T${el('scheduledTime').value}`))/60000 > 5) }; await setDoc(doc(db, `registros_pie/${userId}/bitacora/master`), { logs: arrayUnion(newLog) }, { merge: true }); alert("✅ Guardado"); el('commitmentText').value=''; el('arrivalTime').value=''; el('delayDisplay').classList.add('hidden'); currentStatus = null; document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-400')); }
+        async function deleteLog(id) { if(confirm("¿Borrar?")) await updateDoc(doc(db, `registros_pie/${userId}/bitacora/master`), { logs: arrayRemove(logsData.find(l => l.id === id)) }); } window.deleteLogWrapper = deleteLog;
+        function renderUI() { const tf = el('filterTeacher').value, start = el('filterStart').value, end = el('filterEnd').value; const filtered = logsData.filter(l => (tf === 'all' || l.teacher === tf) && (!start || l.date >= start) && (!end || l.date <= end)).sort((a,b) => b.id - a.id); el('logsTableBody').innerHTML = filtered.map(l => { let pBadge = l.isLate ? '<span class="text-red-700 font-bold text-xs">Atrasado</span>' : '<span class="text-emerald-700 font-bold text-xs">Puntual</span>'; if(!l.arrival) pBadge = '<span class="text-gray-400">-</span>'; const mStyles = {'green':'text-emerald-600 font-bold','yellow':'text-amber-600 font-bold','red':'text-rose-600 font-bold','none':'text-gray-400'}; const mLabels = {'green':'Entregado','yellow':'Fuera Plazo','red':'NO Entregó','none':'-'}; return `<tr class="border-b hover:bg-slate-50"><td class="px-4 py-2 whitespace-nowrap">${l.date}</td><td class="px-4 py-2 font-medium">${l.teacher}</td><td class="px-4 py-2 text-center text-xs"><div class="text-gray-500">${l.scheduled||'?'} - ${l.arrival||'?'}</div>${pBadge}</td><td class="px-4 py-2 text-center text-xs ${mStyles[l.material]}">${mLabels[l.material]}</td><td class="px-4 py-2 text-xs max-w-xs truncate">${l.text}</td><td class="px-4 py-2 text-right no-print"><button onclick="window.deleteLogWrapper(${l.id})" class="text-red-300 hover:text-red-500">🗑️</button></td></tr>`; }).join(''); updateChart(filtered); el('printDateRange').textContent = `Periodo: ${start||'Inicio'} al ${end||'Hoy'}`; }
+        function sendWhatsapp() { const sel = el('teacherSelect'), name = sel.value; const phone = sel.options[sel.selectedIndex]?.dataset.phone; if(!name) return alert("Selecciona docente"); if(!phone || phone === 'undefined') return alert(`Falta teléfono de ${name}`); window.open(`https://wa.me/${phone.replace('+','')}?text=${encodeURIComponent(`Hola *${name}*, recuerdo material PIE pendiente. Saludos.`)}`, '_blank'); }
+        function sendEmailToUTP() { let targetTeacher = el('teacherSelect').value || (el('filterTeacher').value !== 'all' ? el('filterTeacher').value : null); if(!targetTeacher) return alert("Selecciona un docente para el reporte."); generateWarningPDF(true); const subject = `Reporte Incumplimiento PIE - ${targetTeacher}`; const body = `Estimada Jefa de UTP,\n\nAdjunto hago envío de la Notificación de Incumplimiento correspondiente al docente ${targetTeacher}.\n\n(El archivo PDF se ha descargado en su equipo. Por favor, arrástrelo a este correo antes de enviar).\n\nAtte.\nNayadeth Pérez Iturra\nCoordinadora PIE`; setTimeout(() => { window.location.href = `mailto:utp.veloz@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`; alert("📧 Se ha abierto su programa de correo.\n\n⚠️ IMPORTANTE: Arrastre el PDF descargado al mensaje."); }, 1000); }
+        async function generateWarningPDF(silentMode = false) { let targetTeacher = el('teacherSelect').value || (el('filterTeacher').value !== 'all' ? el('filterTeacher').value : null); if(!targetTeacher) { if(!silentMode) alert("Selecciona un docente."); return; } const teacherLogs = logsData.filter(l => l.teacher === targetTeacher); const lateLogs = teacherLogs.filter(l => l.isLate); const missingLogs = teacherLogs.filter(l => l.material === 'red'); if(lateLogs.length === 0 && missingLogs.length === 0) { if(!silentMode) alert("El docente no tiene registros negativos."); return; } const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            if (safeLogoBase64) { try { doc.addImage(safeLogoBase64, 'JPEG', 15, 15, 25, 25); } catch(e) { console.log("Error logo PDF:", e); } }
+            doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.text("Escuela Agrícola Sagrados Corazones", 105, 25, { align: "center" }); doc.setFontSize(12); doc.setFont("helvetica", "normal"); doc.text("Programa de Integración Escolar (PIE)", 105, 32, { align: "center" }); doc.line(20, 38, 190, 38);
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text("NOTIFICACIÓN DE INCUMPLIMIENTO", 105, 55, { align: "center" }); doc.text("TRABAJO COLABORATIVO", 105, 62, { align: "center" });
+            doc.setFontSize(11); doc.setFont("helvetica", "normal"); doc.text(`Docente: ${targetTeacher}`, 20, 85); doc.text(`Fecha de Emisión: ${new Date().toLocaleDateString()}`, 20, 92);
+            let yPos = 105;
+            if (missingLogs.length > 0) { doc.setFont("helvetica", "bold"); doc.setTextColor(200, 0, 0); doc.text(`MATERIAL NO ENTREGADO (${missingLogs.length} ocasiones):`, 20, yPos); yPos += 7; doc.setFont("helvetica", "normal"); doc.setTextColor(0, 0, 0); missingLogs.forEach(l => { let text = l.text.length > 65 ? l.text.substring(0, 65) + "..." : l.text; doc.text(`• ${l.date}: ${text}`, 25, yPos); yPos += 6; }); yPos += 5; }
+            if (lateLogs.length > 0) { doc.setFont("helvetica", "bold"); doc.setTextColor(200, 0, 0); doc.text(`ATRASOS AL HORARIO (${lateLogs.length} ocasiones):`, 20, yPos); yPos += 7; doc.setFont("helvetica", "normal"); doc.setTextColor(0, 0, 0); lateLogs.forEach(l => { doc.text(`• ${l.date}: Citación ${l.scheduled} / Llegada ${l.arrival}`, 25, yPos); yPos += 6; }); yPos += 5; }
+            doc.text("Se solicita regularizar esta situación para el correcto funcionamiento del programa.", 20, yPos + 15);
+            yPos = 250; doc.line(30, yPos, 80, yPos); doc.text("Nayadeth Pérez Iturra", 55, yPos + 5, { align: "center" }); doc.text("Coordinadora PIE", 55, yPos + 10, { align: "center" }); doc.line(130, yPos, 180, yPos); doc.text("Alejandra Morales", 155, yPos + 5, { align: "center" }); doc.text("Jefa de UTP", 155, yPos + 10, { align: "center" }); doc.setFontSize(8); doc.setTextColor(150); doc.text("Desarrollado por ProfeAle", 105, 285, { align: "center" }); doc.save(`Amonestacion_${targetTeacher.replace(/\s+/g, '_')}.pdf`); }
+        function updateChart(logs) { const ctx = el('complianceChart').getContext('2d'); const teachers = [...new Set(logs.map(l => l.teacher))]; const dataOk = [], dataFail = []; teachers.forEach(t => { const tLogs = logs.filter(l => l.teacher === t); const fails = tLogs.filter(l => l.material === 'red' || l.isLate).length; dataOk.push(tLogs.length - fails); dataFail.push(fails); }); if(chartInstance) chartInstance.destroy(); chartInstance = new Chart(ctx, { type: 'bar', data: { labels: teachers, datasets: [{ label: 'Cumple', data: dataOk, backgroundColor: '#10b981' }, { label: 'Incumple', data: dataFail, backgroundColor: '#f43f5e' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } } }); }
+        window.onload = init;
+    </script>
+</body>
+</html>
