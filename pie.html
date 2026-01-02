@@ -159,33 +159,81 @@
             );
         };
 
-        // --- BITÁCORA ---
-        const ProgressView = ({ students, progress, onAdd }) => {
-            const [form, setForm] = useState({ studentId: "", date: new Date().toISOString().split('T')[0], achievements: "", barriers: "", strategies: "", familySupport: "", social: "Adecuada", health: "Sin observaciones" });
-            const handleSubmit = (e) => { e.preventDefault(); onAdd(form); alert("Guardado"); setForm({...form, achievements:"", barriers:"", strategies:"", familySupport:""}); };
+        // --- BITÁCORA (Con Edición) ---
+        const ProgressView = ({ students, progress, onAdd, onUpdate }) => {
+            const initialForm = { studentId: "", date: new Date().toISOString().split('T')[0], achievements: "", barriers: "", strategies: "", familySupport: "", social: "Adecuada", health: "Sin observaciones" };
+            const [form, setForm] = useState(initialForm);
+            const [isEditing, setIsEditing] = useState(false);
+            
+            const handleSubmit = (e) => { 
+                e.preventDefault(); 
+                if (isEditing) {
+                    onUpdate(form.id, form);
+                    alert("Bitácora actualizada");
+                    setIsEditing(false);
+                } else {
+                    onAdd(form); 
+                    alert("Guardado"); 
+                }
+                setForm(initialForm); 
+            };
+
+            const handleEdit = (p) => {
+                setForm(p);
+                setIsEditing(true);
+            };
+
+            const handleCancel = () => {
+                setForm(initialForm);
+                setIsEditing(false);
+            };
             
             return (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-white p-6 rounded-xl shadow-sm">
-                        <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><LucideIcon name="FileText" className="text-emerald-600"/> Nuevo Registro</h3>
+                    <div className="bg-white p-6 rounded-xl shadow-sm border-t-4 border-emerald-500">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                <LucideIcon name={isEditing ? "Edit" : "FileText"} className="text-emerald-600"/> 
+                                {isEditing ? "Editando Registro" : "Nuevo Registro"}
+                            </h3>
+                            {isEditing && (
+                                <button onClick={handleCancel} className="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded text-slate-700">
+                                    Cancelar Edición
+                                </button>
+                            )}
+                        </div>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <select className="w-full p-2 border rounded" value={form.studentId} onChange={e=>setForm({...form, studentId: e.target.value})} required><option value="">Seleccionar Estudiante...</option>{students.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select>
+                            <select className="w-full p-2 border rounded" value={form.studentId} onChange={e=>setForm({...form, studentId: e.target.value})} required disabled={isEditing}>
+                                <option value="">Seleccionar Estudiante...</option>
+                                {students.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
+                            </select>
                             <input type="date" className="w-full p-2 border rounded" value={form.date} onChange={e=>setForm({...form, date: e.target.value})} required/>
                             <textarea className="w-full p-2 border rounded h-20" placeholder="Logros y Avances" value={form.achievements} onChange={e=>setForm({...form, achievements: e.target.value})} required></textarea>
                             <textarea className="w-full p-2 border rounded h-20" placeholder="Barreras / Dificultades" value={form.barriers} onChange={e=>setForm({...form, barriers: e.target.value})} required></textarea>
                             <textarea className="w-full p-2 border rounded h-20" placeholder="Estrategias" value={form.strategies} onChange={e=>setForm({...form, strategies: e.target.value})} required></textarea>
                             <textarea className="w-full p-2 border rounded h-20" placeholder="Acuerdos Familia" value={form.familySupport} onChange={e=>setForm({...form, familySupport: e.target.value})} required></textarea>
-                            <button type="submit" className="w-full bg-emerald-600 text-white py-2 rounded font-bold hover:bg-emerald-700">Guardar Bitácora</button>
+                            
+                            <button type="submit" className={`w-full text-white py-2 rounded font-bold transition-all ${isEditing ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-600 hover:bg-emerald-700'}`}>
+                                {isEditing ? 'Actualizar Cambios' : 'Guardar Bitácora'}
+                            </button>
                         </form>
                     </div>
                     <div className="space-y-4 max-h-[800px] overflow-y-auto">
                         {progress.map(p => {
                             const st = students.find(s => s.id == p.studentId);
                             return (
-                                <div key={p.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                                    <div className="flex justify-between items-start mb-2"><h4 className="font-bold text-slate-800">{st?.name || "Desconocido"}</h4><span className="text-xs text-slate-500">{p.date}</span></div>
-                                    <p className="text-xs text-slate-600 mb-1"><strong>Logros:</strong> {p.achievements}</p>
-                                    <p className="text-xs text-slate-600"><strong>Barreras:</strong> {p.barriers}</p>
+                                <div key={p.id} className={`bg-white p-4 rounded-xl shadow-sm border transition-all ${isEditing && form.id === p.id ? 'border-amber-400 ring-2 ring-amber-100' : 'border-slate-200'}`}>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 className="font-bold text-slate-800">{st?.name || "Desconocido"}</h4>
+                                            <span className="text-xs text-slate-500">{p.date}</span>
+                                        </div>
+                                        <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded transition-colors" title="Editar este informe">
+                                            <LucideIcon name="Pencil" size={16}/>
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-slate-600 mb-1 line-clamp-2"><strong>Logros:</strong> {p.achievements}</p>
+                                    <p className="text-xs text-slate-600 line-clamp-2"><strong>Barreras:</strong> {p.barriers}</p>
                                 </div>
                             );
                         })}
@@ -288,6 +336,16 @@
             const delS26 = async (id) => { if(user && confirm('¿Borrar aspirante 2026?')) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'students_2026', id)); };
 
             const addP = async (d) => { if(user) await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'progress'), d); };
+            
+            // --- NUEVA FUNCIÓN PARA ACTUALIZAR BITÁCORA ---
+            const updateP = async (id, updatedData) => {
+                if(user) {
+                    // Extraemos el ID para no guardarlo dentro de la data del documento
+                    const { id: _, ...dataToSave } = updatedData; 
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'progress', id), dataToSave);
+                }
+            };
+
             const updateLogo = async (base64) => { if(user) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings'), { logo: base64 }, { merge: true }); };
 
             return (
@@ -318,7 +376,10 @@
                         <div className="p-6 max-w-7xl mx-auto print:p-0 print:w-full print:max-w-none">
                             {activeTab === 'dashboard' && <DashboardView students={students} progress={progress} isConnected={!!user} authError={authError} />}
                             {activeTab === 'students' && <StudentsView students={students} onAdd={addS} onDelete={delS} />}
-                            {activeTab === 'progress' && <ProgressView students={students} progress={progress} onAdd={addP} />}
+                            
+                            {/* Pestaña Progress con función update */}
+                            {activeTab === 'progress' && <ProgressView students={students} progress={progress} onAdd={addP} onUpdate={updateP} />}
+                            
                             {activeTab === 'reports' && <ReportsView students={students} progress={progress} globalLogo={logo} onUpdateLogo={updateLogo} />}
                             
                             {/* 3. VISTA AÑO 2026 (FUNCIONAL) */}
